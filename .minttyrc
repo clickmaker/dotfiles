@@ -1,0 +1,13 @@
+BoldAsFont=-1
+Font=Inconsolata
+FontHeight=12
+Locale=ja_JP
+Charset=UTF-8
+Language=en
+Term=xterm-256color
+Transparency=20
+IMECursorColour=255,0,0
+CursorType=block
+Columns=168
+Rows=35
+ThemeFile=
