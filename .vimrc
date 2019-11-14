@@ -54,6 +54,7 @@ let g:neobundle_default_git_protocol='https'
   NeoBundle 'mattn/emmet-vim'
   " syntax check
   NeoBundle 'scrooloose/syntastic'
+  NeoBundle 'evidens/vim-twig'
   " align
   NeoBundle 'junegunn/vim-easy-align'
 
@@ -83,6 +84,12 @@ if s:is_cygwin
 else
   set t_Co=256
 endif
+
+" encoding
+set encoding=utf-8
+scriptencoding utf-8
+set fileencodings=utf-8,iso-2022-jp,cp932,sjis,euc-jp
+set fileformats=unix,dos,mac
 
 " color
 syntax on
@@ -162,3 +169,9 @@ nmap ga <Plug>(EasyAlign)
 " PHP
 let g:PHP_vintage_case_default_indent = 1
 let g:PHP_outdentphpescape = 0
+
+" diff
+if &diff
+    " diff mode
+    set diffopt+=iwhite
+endif
