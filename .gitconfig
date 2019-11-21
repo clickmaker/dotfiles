@@ -10,7 +10,6 @@
     dfs = diff --staged
     dfw = diff --word-diff
     brgc = ! git branch --merged | egrep -v '(^\\*|master|dev)' | xargs git branch -d
-
 [color]
     diff = auto
     status = auto
@@ -18,3 +17,5 @@
     interactive = auto
     ui = true
     pager = true
+[core]
+	editor = vim

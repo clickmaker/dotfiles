@@ -13,11 +13,21 @@ bind e setw synchronize-panes on
 bind E setw synchronize-panes off
 
 # mouse
-#setw -g mode-mouse on
-#set -g mouse-select-window on
-#set -g mouse-select-pane on
-#set -g mouse-resize-pane on
-#set -g mouse-utf8 on
+bind m run "\
+  tmux show-options -gw | grep -q "mouse\\s*on"; \
+  if [ \$? = 0 ]; \
+    then  \
+      toggle=off;  \
+    else  \
+      toggle=on;  \
+  fi;  \
+  tmux display \"mouse is now: \$toggle\";  \
+  tmux setw -gq mode-mouse \$toggle; \
+  tmux set -gq mouse-select-window \$toggle; \
+  tmux set -gq mouse-select-pane \$toggle; \
+  tmux set -gq mouse-resize-pane \$toggle; \
+  tmux set -gq mouse-utf8 \$toggle; \
+"
 
 # history
 set -g history-limit 5000
@@ -51,3 +61,10 @@ unbind C-O
 
 # config
 bind r source-file ~/.tmux.conf \; display "Reloaded ~/.tmux.conf"
+
+
+set  -g pane-active-border-bg    default
+set  -g pane-active-border-fg    green
+set  -g pane-border-bg           default
+set  -g pane-border-fg           green
+setw -g window-status-current-fg black
