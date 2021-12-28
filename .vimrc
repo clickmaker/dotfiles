@@ -10,6 +10,18 @@ endif
 
 " Neobundle block start
 
+" Note: Skip initialization for vim-tiny or vim-small.
+if 0 | endif
+
+if has('vim_starting')
+  if &compatible
+    set nocompatible " Be iMproved
+  endif
+
+  " Required:
+  set runtimepath+=~/.vim/bundle/neobundle.vim/
+endif
+
 call neobundle#begin(expand('~/.vim/bundle/'))
 
 let g:neobundle_default_git_protocol='https'
@@ -55,9 +67,16 @@ let g:neobundle_default_git_protocol='https'
   " syntax check
   NeoBundle 'scrooloose/syntastic'
   NeoBundle 'evidens/vim-twig'
+  NeoBundle 'slim-template/vim-slim'
   " align
   NeoBundle 'junegunn/vim-easy-align'
+  " editconfig
+  NeoBundle 'editorconfig/editorconfig-vim'
+  " git sign
+  NeoBundle 'airblade/vim-gitgutter'
 
+  " local vimrc
+  NeoBundle 'embear/vim-localvimrc'
 " neobundle end
 
 NeoBundleCheck
@@ -65,6 +84,16 @@ call neobundle#end()
 " Neobundle block end
 
 filetype plugin indent on
+
+" If there are uninstalled bundles found on startup,
+" this will conveniently prompt you to install them.
+NeoBundleCheck
+
+" Pathogen install
+" mkdir -p ~/.vim/autoload ~/.vim/bundle && \
+" curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
+execute pathogen#infect()
+
 
 let s:is_windows =  has('win16') || has('win32') || has('win64')
 let s:is_cygwin  =  has('win32unix')
@@ -104,6 +133,7 @@ set smarttab
 set autoindent
 set smartindent
 
+set number
 " frames
 " status line
 " set statusline=%n\ %f%m\ [%{&ff},%Y,%{(&fenc!=''?&fenc:&enc)},%l/%L(%p%%),%{getfsize(expand('%%:p'))}byte]
@@ -141,7 +171,7 @@ set splitright
 
 " nerdtree
 map <C-m><C-m> :NERDTreeToggle<CR>
-let g:NERDTreeIndicatorMapCustom = {
+let g:NERDTreeGitStatusIndicatorMapCustom = {
     \ "Modified"  : "!",
     \ "Staged"    : "+",
     \ "Untracked" : "*",
@@ -175,3 +205,24 @@ if &diff
     " diff mode
     set diffopt+=iwhite
 endif
+
+" lcoal
+let g:localvimrc_ask=0
+
+" syntax check
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 0
+let g:syntastic_check_on_wq = 0
+let g:syntastic_enable_signs=1
+"let g:syntastic_mode_map = { 'mode': 'passive', 'passive_filetypes': ['ruby'] }
+"let g:syntastic_ruby_checkers = ['rubocop']
+" let g:syntastic_ruby_rubocop_exe = 'bundle exec rubocop'
+nnoremap <C-C> :w<CR>:SyntasticCheck<CR>
+
+autocmd BufRead,BufNewFile *.slim setlocal filetype=slim
+
+" let g:user_emmet_leader_key='<c-t>'
