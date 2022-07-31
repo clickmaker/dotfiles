@@ -13,6 +13,8 @@
     dfs = diff --staged -w
     dfw = diff --word-diff
     brgc = ! git branch --merged | egrep -v '(^\\*|master|dev)' | xargs git branch -d
+    chbr = "!sh -c 'git checkout $1 && docker-compose restart' -"
+    cmemp = commit --allow-empty
 [color]
     diff = auto
     status = auto

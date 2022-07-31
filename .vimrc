@@ -1,9 +1,13 @@
 " neobundle settings {
 if has('vim_starting')
   set nocompatible
+  if !isdirectory(expand("~/.vim/bundle/"))
+    echo "make dir bundle..."
+    :call system("mkdir ~/.vim/bundle")
+  endif
   if !isdirectory(expand("~/.vim/bundle/neobundle.vim/"))
     echo "install neobundle..."
-    :call system("git clone git://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim")
+    :call system("git clone https://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim")
   endif
   set runtimepath+=~/.vim/bundle/neobundle.vim/
 endif
@@ -13,15 +17,6 @@ endif
 " Note: Skip initialization for vim-tiny or vim-small.
 if 0 | endif
 
-if has('vim_starting')
-  if &compatible
-    set nocompatible " Be iMproved
-  endif
-
-  " Required:
-  set runtimepath+=~/.vim/bundle/neobundle.vim/
-endif
-
 call neobundle#begin(expand('~/.vim/bundle/'))
 
 let g:neobundle_default_git_protocol='https'
@@ -29,16 +24,19 @@ let g:neobundle_default_git_protocol='https'
   " original on github
   NeoBundleFetch 'Shougo/neobundle.vim'
 
-  NeoBundle 'Shougo/vimproc', {
-    \ 'build' : {
-      \ 'windows' : 'make -f make_mingw32.mak',
-      \ 'cygwin' : 'make -f make_cygwin.mak',
-      \ 'mac' : 'make -f make_mac.mak',
-      \ 'unix' : 'make -f make_unix.mak',
-    \ },
-    \ }
+  " NeoBundle 'Shougo/vimproc', {
+  "   \ 'build' : {
+  "     \ 'windows' : 'make -f make_mingw32.mak',
+  "     \ 'cygwin' : 'make -f make_cygwin.mak',
+  "     \ 'mac' : 'make -f make_mac.mak',
+  "     \ 'unix' : 'make -f make_unix.mak',
+  "   \ },
+  "   \ }
 
-  NeoBundle 'Shougo/vimshell'
+  " NeoBundle 'Shougo/vimshell'
+
+  " Pathogen
+  NeoBundle 'tpope/vim-pathogen'
 
   " file controll
   NeoBundle 'Shougo/unite.vim'
@@ -62,24 +60,36 @@ let g:neobundle_default_git_protocol='https'
   NeoBundle 'jtai/vim-womprat'
 
   " input helper
+  " indent guids
+  NeoBundle 'nathanaelkane/vim-indent-guides'
   " zencoding
   NeoBundle 'mattn/emmet-vim'
   " syntax check
-  NeoBundle 'scrooloose/syntastic'
+  NeoBundle 'vim-syntastic/syntastic'
   NeoBundle 'evidens/vim-twig'
   NeoBundle 'slim-template/vim-slim'
+  NeoBundle '1000ch/syntastic-local-textlint.vim'
+  " NeoBundle 'HerringtonDarkholme/yats.vim'
+  NeoBundle 'leafgarland/typescript-vim'
+  NeoBundle 'rcmdnk/vim-markdown'
   " align
   NeoBundle 'junegunn/vim-easy-align'
   " editconfig
   NeoBundle 'editorconfig/editorconfig-vim'
   " git sign
   NeoBundle 'airblade/vim-gitgutter'
-
   " local vimrc
   NeoBundle 'embear/vim-localvimrc'
-" neobundle end
 
-NeoBundleCheck
+  " markdown preview
+  " - install yarn
+  " - cd ~/.vim/bundle/markdown-preview.nvim/app
+  " - yarn install
+  NeoBundle 'iamcco/markdown-preview.nvim'
+
+  " esa
+  NeoBundle 'upamune/esa.vim', {'depends': 'mattn/webapi-vim'}
+
 call neobundle#end()
 " Neobundle block end
 
@@ -89,11 +99,11 @@ filetype plugin indent on
 " this will conveniently prompt you to install them.
 NeoBundleCheck
 
-" Pathogen install
-" mkdir -p ~/.vim/autoload ~/.vim/bundle && \
-" curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
-execute pathogen#infect()
-
+" Pathogen
+if isdirectory(expand('~/.vim/bundle/neobundle/vim-pathogen'))
+ call pathogen#infect('~/.vim/bundle/pathogen')
+ call pathogen#helptags()
+endif
 
 let s:is_windows =  has('win16') || has('win32') || has('win64')
 let s:is_cygwin  =  has('win32unix')
@@ -114,6 +124,12 @@ else
   set t_Co=256
 endif
 
+" clicpboard
+set clipboard+=unnamed
+
+" leader
+let mapleader = ","
+
 " encoding
 set encoding=utf-8
 scriptencoding utf-8
@@ -123,7 +139,9 @@ set fileformats=unix,dos,mac
 " color
 syntax on
 set background=dark
-colorscheme womprat
+if isdirectory(expand("~/.vim/bundle/vim-womprat/"))
+  colorscheme womprat
+endif
 
 " tab indent
 set shiftwidth=4
@@ -132,6 +150,7 @@ set tabstop=4
 set smarttab
 set autoindent
 set smartindent
+autocmd FileType yaml IndentGuidesEnable
 
 set number
 " frames
@@ -213,16 +232,37 @@ let g:localvimrc_ask=0
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
+
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
+let g:syntastic_check_on_wq = 1
 let g:syntastic_enable_signs=1
-"let g:syntastic_mode_map = { 'mode': 'passive', 'passive_filetypes': ['ruby'] }
-"let g:syntastic_ruby_checkers = ['rubocop']
-" let g:syntastic_ruby_rubocop_exe = 'bundle exec rubocop'
-nnoremap <C-C> :w<CR>:SyntasticCheck<CR>
+
+" let g:syntastic_mode_map = { 'mode': 'passive', 'passive_filetypes': ['ruby'] }
+" let g:syntastic_ruby_checkers = ['rubocop']
+" let g:syntastic_ruby_rubocop_exe = 'rubocop'
 
 autocmd BufRead,BufNewFile *.slim setlocal filetype=slim
-
 " let g:user_emmet_leader_key='<c-t>'
+nnoremap <Leader>sc :SyntasticCheck<CR>
+nnoremap <Leader>st :SyntasticToggleMode<CR>
+
+set signcolumn=yes
+let g:gitgutter_async = 1
+let g:gitgutter_sign_modified = 'rw'
+highlight GitGutterAdd ctermfg=green
+highlight GitGutterChange ctermfg=yellow
+highlight GitGutterDelete ctermfg=red
+highlight GitGutterChangeDelete ctermfg=yellow
+
+nnoremap <Leader>cr :ChromeReload<CR><C-l>
+
+let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': ['markdown', 'text'] }
+let g:syntastic_markdown_checkers = ['textlint']
+let g:syntastic_text_checkers = ['textlint']
+let g:vim_markdown_folding_disabled = 1
+
+autocmd FileType markdown let g:EditorConfig_disable_rules = ['trim_trailing_whitespace']
+autocmd FileType markdown inoremap <buffer> <C-J> <C-O>$<Space><Space><CR>
+
