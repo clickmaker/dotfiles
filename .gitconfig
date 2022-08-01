@@ -24,3 +24,5 @@
     pager = true
 [core]
 	editor = vim
+    autocrlf = input
+    pager = "less -FRX"
