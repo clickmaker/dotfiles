@@ -3,7 +3,7 @@ if has('vim_starting')
   set nocompatible
   if !isdirectory(expand("~/.vim/bundle/"))
     echo "make dir bundle..."
-    :call system("mkdir ~/.vim/bundle")
+    call system("mkdir ~/.vim/bundle")
   endif
   if !isdirectory(expand("~/.vim/bundle/neobundle.vim/"))
     echo "install neobundle..."
@@ -47,7 +47,7 @@ let g:neobundle_default_git_protocol='https'
   NeoBundle 'Xuyuanp/nerdtree-git-plugin'
 
   " buffer control
-  NeoBundle 'rbgrouleff/bclose.vim'
+  "NeoBundle 'rbgrouleff/bclose.vim'
   "NeoBundle 'vadimr/bclose.vim'
   NeoBundle 'vim-airline/vim-airline'
   NeoBundle 'vim-airline/vim-airline-themes'
@@ -67,7 +67,6 @@ let g:neobundle_default_git_protocol='https'
   " syntax check
   NeoBundle 'vim-syntastic/syntastic'
   NeoBundle 'evidens/vim-twig'
-  NeoBundle 'slim-template/vim-slim'
   NeoBundle '1000ch/syntastic-local-textlint.vim'
   " NeoBundle 'HerringtonDarkholme/yats.vim'
   NeoBundle 'leafgarland/typescript-vim'
@@ -80,6 +79,8 @@ let g:neobundle_default_git_protocol='https'
   NeoBundle 'airblade/vim-gitgutter'
   " local vimrc
   NeoBundle 'embear/vim-localvimrc'
+  " copilot
+  NeoBundle 'github/copilot.vim'
 
   " markdown preview
   " - install yarn
@@ -87,9 +88,12 @@ let g:neobundle_default_git_protocol='https'
   " - yarn install
   NeoBundle 'iamcco/markdown-preview.nvim'
 
+  " yaml folding
+  NeoBundle 'pedrohdz/vim-yaml-folds'
   " esa
   NeoBundle 'upamune/esa.vim', {'depends': 'mattn/webapi-vim'}
 
+  NeoBundle 'mattn/vim-chatgpt'
 call neobundle#end()
 " Neobundle block end
 
@@ -167,6 +171,7 @@ noremap k gk
 
 " search
 set ignorecase
+set smartcase
 set incsearch
 set hlsearch
 set nowrapscan
@@ -206,8 +211,17 @@ let g:NERDTreeGitStatusIndicatorMapCustom = {
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_theme='jellybeans'
 
-" bclose
-cmap bc Bclose
+" Buffre Close
+nnoremap <Leader>d :bp<bar>sp<bar>bn<bar>bd<bar>bn<CR>
+" Chrome Reload
+nnoremap <Leader>r :ChromeReload<CR><C-l>
+" let g:user_emmet_leader_key='<c-t>'
+nnoremap <Leader>c :SyntasticCheck<CR>
+
+nnoremap <C-p> :bp<CR>
+nnoremap <C-n> :bn<CR>
+
+cmap mdp MarkdownPreview
 
 " vim-easy-align
 " Start interactive EasyAlign in visual mode (e.g. vipga)
@@ -243,11 +257,6 @@ let g:syntastic_enable_signs=1
 " let g:syntastic_ruby_checkers = ['rubocop']
 " let g:syntastic_ruby_rubocop_exe = 'rubocop'
 
-autocmd BufRead,BufNewFile *.slim setlocal filetype=slim
-" let g:user_emmet_leader_key='<c-t>'
-nnoremap <Leader>sc :SyntasticCheck<CR>
-nnoremap <Leader>st :SyntasticToggleMode<CR>
-
 set signcolumn=yes
 let g:gitgutter_async = 1
 let g:gitgutter_sign_modified = 'rw'
@@ -256,11 +265,12 @@ highlight GitGutterChange ctermfg=yellow
 highlight GitGutterDelete ctermfg=red
 highlight GitGutterChangeDelete ctermfg=yellow
 
-nnoremap <Leader>cr :ChromeReload<CR><C-l>
 
 let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': ['markdown', 'text'] }
 let g:syntastic_markdown_checkers = ['textlint']
 let g:syntastic_text_checkers = ['textlint']
+
+set foldmethod=manual
 let g:vim_markdown_folding_disabled = 1
 
 autocmd FileType markdown let g:EditorConfig_disable_rules = ['trim_trailing_whitespace']
