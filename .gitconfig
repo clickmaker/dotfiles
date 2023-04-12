@@ -3,17 +3,18 @@
     df = diff -w
     st = status
     co = checkout
-    cm = commit
+    cb = "!sh -c 'git stash && git checkout $1 && git stash pop' -"
+    cm = "!sh -c 'git commit -m \"$1\"' -"
     rs = reset
     rb = reset --soft HEAD^
     ps = ! git push origin `git branch --contains=HEAD | awk '{print $2}'`
-    graph = log --graph --date=short --decorate=short --pretty=format:'%Cgreen%h %Creset%cd %Cblue%cn %Cred%d %Creset%s'
     gr = log --graph --date=short --decorate=short --pretty=format:'%Cgreen%h %Creset%cd %Cblue%cn %Cred%d %Creset%s'
     stt = status -uno
     dfs = diff --staged -w
     dfw = diff --word-diff
-    brgc = ! git branch --merged | egrep -v '(^\\*|master|dev)' | xargs git branch -d
+    brgc = ! git branch --merged | egrep -v '(^\\*|master|main|dev)' | xargs git branch -d
     chbr = "!sh -c 'git checkout $1 && docker-compose restart' -"
+    upst = "!sh -c 'git branch --set-upstream-to=origin/$1 $1' -"
     cmemp = commit --allow-empty
 [color]
     diff = auto
@@ -23,6 +24,6 @@
     ui = true
     pager = true
 [core]
-	editor = vim
+    editor = vim
     autocrlf = input
     pager = "less -FRX"
