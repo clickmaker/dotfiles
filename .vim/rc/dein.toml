@@ -21,6 +21,17 @@ hook_post_update = '''
 [[plugins]]
 repo = 'Townk/vim-autoclose'
 
+# status
+[[plugins]]
+repo    = 'vim-airline/vim-airline'
+depends = ['vim-airline-themes']
+
+[[plugins]]
+repo = 'vim-airline/vim-airline-themes'
+
+[[plugins]]
+repo =  'scrooloose/syntastic'
+
 # color schemes
 [[plugins]]
 repo = 'jtai/vim-womprat'
