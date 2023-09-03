@@ -33,3 +33,95 @@ if len(s:removed_plugins) > 0
   call dein#recache_runtimepath()
 endif
 " }}}
+
+" leader
+let mapleader = ","
+
+" encoding
+set encoding=utf-8
+scriptencoding utf-8
+set fileencodings=utf-8,iso-2022-jp,cp932,sjis,euc-jp
+set fileformats=unix,dos,mac
+
+" cursor
+set backspace=eol,indent,start
+set wildmode=list:longest
+set nrformats=""
+noremap j gj
+noremap k gk
+noremap <down> gj
+noremap <up> gk
+
+" tab indent
+set shiftwidth=4
+set expandtab
+set tabstop=4
+set smarttab
+set autoindent
+set smartindent
+
+" buffer
+set nobackup
+set noswapfile
+set hidden
+set splitbelow
+set splitright
+
+" color
+syntax on
+set background=dark
+colorscheme womprat
+
+" information
+set number
+
+" special chars
+set list
+set listchars=tab:>\ ,trail:-,nbsp:%,extends:>,precedes:<
+hi ZenkakuSpace cterm=underline ctermfg=lightblue guibg=#666666
+au BufNewFile,BufRead * match ZenkakuSpace /　/
+set ambiwidth=double
+set showmatch
+
+" spell
+set nospell
+let g:enable_spelunker_vim = 1
+highlight SpelunkerSpellBad cterm=underline ctermfg=160 gui=underline guifg=#9e9e9e
+highlight SpelunkerComplexOrCompoundWord cterm=underline ctermfg=NONE gui=underline guifg=NONE
+
+" search
+set ignorecase
+set smartcase
+set incsearch
+set hlsearch
+set nowrapscan
+nmap * *N
+
+" Command Map
+" Buffre Close
+nnoremap <Leader>d :bp<bar>sp<bar>bn<bar>bd<bar>bn<CR>
+" Chrome Reload
+nnoremap <Leader>r :ChromeReload<CR><C-l>
+" let g:user_emmet_leader_key='<c-t>'
+nnoremap <Leader>c :SyntasticCheck<CR>
+" calc
+nnoremap <LEADER>a :call Calc()<CR>
+
+" buffer
+nnoremap <C-p> :bp<CR>
+nnoremap <C-n> :bn<CR>
+
+" no copy on delete
+nnoremap x "_x
+nnoremap dd "_dd
+nnoremap D "_D
+nnoremap s "_s
+
+" move lines
+nnoremap J :m .+1<CR>==
+nnoremap K :m .-2<CR>==
+inoremap J <Esc>:m .+1<CR>==gi
+inoremap K <Esc>:m .-2<CR>==gi
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
+

@@ -17,3 +17,22 @@ hook_post_update = '''
   let g:dein#plugin.build = cmd
 '''
 
+# file
+[[plugins]]
+repo = 'Townk/vim-autoclose'
+
+# color schemes
+[[plugins]]
+repo = 'jtai/vim-womprat'
+
+# spell check
+[[plugins]]
+repo = 'kamykn/spelunker.vim'
+
+# color code
+[[plugins]]
+repo = 'gorodinskiy/vim-coloresque'
+
+# calc
+[[plugins]]
+repo = 'theniceboy/vim-calc'
