@@ -25,6 +25,14 @@ repo = 'Townk/vim-autoclose'
 [[plugins]]
 repo = 'jtai/vim-womprat'
 
+# git operation
+[[plugins]]
+repo = 'tpope/vim-fugitive'
+
+# show git
+[[plugins]]
+repo = 'airblade/vim-gitgutter'
+
 # spell check
 [[plugins]]
 repo = 'kamykn/spelunker.vim'

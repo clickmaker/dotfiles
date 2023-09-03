@@ -34,6 +34,9 @@ if len(s:removed_plugins) > 0
 endif
 " }}}
 
+filetype plugin indent on
+syntax enable
+
 " leader
 let mapleader = ","
 
@@ -68,7 +71,6 @@ set splitbelow
 set splitright
 
 " color
-syntax on
 set background=dark
 colorscheme womprat
 
