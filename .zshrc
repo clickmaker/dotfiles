@@ -51,12 +51,15 @@ alias f='find . '
 alias g='grep -rIin '
 alias l='ls -la '
 alias s='git status '
+alias shell='exec $SHELL -l'
 
-alias dc='docker-compose '
-alias dcr='docker-compose run --rm runner '
-alias dcrst='docker-compose restart'
-alias dcbe='docker-compose run --rm runner bundle exec '
-alias dcbi='docker-compose run --rm runner bundle install '
+alias dc='docker compose '
+alias dcu='(cd dockerdev && docker compose up -d) || docker compose up -d'
+alias dcd='docker compose down'
+alias dcr='docker compose run --rm runner '
+alias dcrst='docker compose restart'
+alias dcbe='docker compose run --rm runner bundle exec '
+alias dcbi='docker compose run --rm runner bundle install '
 
 function simple-notify {
   osascript -e "display notification \"${2:-has done.}\" with title \"${1:-something}\" sound name \"default\""

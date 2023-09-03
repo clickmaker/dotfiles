@@ -81,6 +81,12 @@ let g:neobundle_default_git_protocol='https'
   NeoBundle 'embear/vim-localvimrc'
   " copilot
   NeoBundle 'github/copilot.vim'
+  " spell check
+  NeoBundle 'kamykn/spelunker.vim'
+  " color code
+  NeoBundle 'gorodinskiy/vim-coloresque'
+  " calc
+  NeoBundle 'theniceboy/vim-calc'
 
   " markdown preview
   " - install yarn
@@ -186,6 +192,16 @@ hi ZenkakuSpace cterm=underline ctermfg=lightblue guibg=#666666
 au BufNewFile,BufRead * match ZenkakuSpace /　/
 set ambiwidth=double
 
+" spell
+set nospell
+let g:enable_spelunker_vim = 1
+highlight SpelunkerSpellBad cterm=underline ctermfg=160 gui=underline guifg=#9e9e9e
+highlight SpelunkerComplexOrCompoundWord cterm=underline ctermfg=NONE gui=underline guifg=NONE
+
+" calc
+nnoremap <LEADER>a :call Calc()<CR>
+
+
 " buffer
 set nobackup
 set noswapfile
@@ -220,6 +236,12 @@ nnoremap <Leader>c :SyntasticCheck<CR>
 
 nnoremap <C-p> :bp<CR>
 nnoremap <C-n> :bn<CR>
+
+" no copy on delete
+nnoremap x "_x
+" nnoremap dd "_dd
+nnoremap D "_D
+nnoremap s "_s
 
 cmap mdp MarkdownPreview
 
