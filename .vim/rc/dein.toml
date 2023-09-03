@@ -29,8 +29,13 @@ depends = ['vim-airline-themes']
 [[plugins]]
 repo = 'vim-airline/vim-airline-themes'
 
+# syntax 
 [[plugins]]
-repo =  'scrooloose/syntastic'
+repo = 'scrooloose/syntastic'
+
+# editorconfig
+[[plugins]]
+repo = 'editorconfig/editorconfig-vim'
 
 # color schemes
 [[plugins]]
@@ -55,3 +60,7 @@ repo = 'gorodinskiy/vim-coloresque'
 # calc
 [[plugins]]
 repo = 'theniceboy/vim-calc'
+
+# copilot
+[[plugins]]
+repo = 'github/copilot.vim'
