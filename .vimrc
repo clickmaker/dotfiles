@@ -1,141 +1,40 @@
-" neobundle settings {
-if has('vim_starting')
-  set nocompatible
-  if !isdirectory(expand("~/.vim/bundle/"))
-    echo "make dir bundle..."
-    call system("mkdir ~/.vim/bundle")
+" dein.vim settings {{{
+let s:dein_dir = expand('~/.cache/dein')
+let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
+
+if &runtimepath !~# '/dein.vim'
+  if !isdirectory(s:dein_repo_dir)
+    execute '!git clone https://github.com/Shougo/dein.vim' s:dein_repo_dir
   endif
-  if !isdirectory(expand("~/.vim/bundle/neobundle.vim/"))
-    echo "install neobundle..."
-    :call system("git clone https://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim")
-  endif
-  set runtimepath+=~/.vim/bundle/neobundle.vim/
+  execute 'set runtimepath^=' . fnamemodify(s:dein_repo_dir, ':p')
 endif
 
-" Neobundle block start
+if dein#load_state(s:dein_dir)
+  call dein#begin(s:dein_dir)
 
-" Note: Skip initialization for vim-tiny or vim-small.
-if 0 | endif
+  let g:rc_dir    = expand('~/.vim/rc')
+  let s:toml      = g:rc_dir . '/dein.toml'
+  let s:lazy_toml = g:rc_dir . '/dein_lazy.toml'
 
-call neobundle#begin(expand('~/.vim/bundle/'))
+  call dein#load_toml(s:toml,      {'lazy': 0})
+  call dein#load_toml(s:lazy_toml, {'lazy': 1})
 
-let g:neobundle_default_git_protocol='https'
+  call dein#end()
+  call dein#save_state()
+endif
 
-  " original on github
-  NeoBundleFetch 'Shougo/neobundle.vim'
+if dein#check_install()
+  call dein#install()
+endif
 
-  " NeoBundle 'Shougo/vimproc', {
-  "   \ 'build' : {
-  "     \ 'windows' : 'make -f make_mingw32.mak',
-  "     \ 'cygwin' : 'make -f make_cygwin.mak',
-  "     \ 'mac' : 'make -f make_mac.mak',
-  "     \ 'unix' : 'make -f make_unix.mak',
-  "   \ },
-  "   \ }
-
-  " NeoBundle 'Shougo/vimshell'
-
-  " Pathogen
-  NeoBundle 'tpope/vim-pathogen'
-
-  " file controll
-  NeoBundle 'Shougo/unite.vim'
-  NeoBundle 'ujihisa/unite-colorscheme'
-
-  " window control
-  NeoBundle 'scrooloose/nerdtree'
-  NeoBundle 'Xuyuanp/nerdtree-git-plugin'
-
-  " buffer control
-  "NeoBundle 'rbgrouleff/bclose.vim'
-  "NeoBundle 'vadimr/bclose.vim'
-  NeoBundle 'vim-airline/vim-airline'
-  NeoBundle 'vim-airline/vim-airline-themes'
-
-  " color schemes
-  NeoBundle 'w0ng/vim-hybrid'
-  NeoBundle 'nanotech/jellybeans.vim'
-  NeoBundle 'dsolstad/vim-wombat256i'
-  NeoBundle 'junegunn/seoul256.vim'
-  NeoBundle 'jtai/vim-womprat'
-
-  " input helper
-  " indent guids
-  NeoBundle 'nathanaelkane/vim-indent-guides'
-  " zencoding
-  NeoBundle 'mattn/emmet-vim'
-  " syntax check
-  NeoBundle 'vim-syntastic/syntastic'
-  NeoBundle 'evidens/vim-twig'
-  NeoBundle '1000ch/syntastic-local-textlint.vim'
-  " NeoBundle 'HerringtonDarkholme/yats.vim'
-  NeoBundle 'leafgarland/typescript-vim'
-  NeoBundle 'rcmdnk/vim-markdown'
-  " align
-  NeoBundle 'junegunn/vim-easy-align'
-  " editconfig
-  NeoBundle 'editorconfig/editorconfig-vim'
-  " git sign
-  NeoBundle 'airblade/vim-gitgutter'
-  " local vimrc
-  NeoBundle 'embear/vim-localvimrc'
-  " copilot
-  NeoBundle 'github/copilot.vim'
-  " spell check
-  NeoBundle 'kamykn/spelunker.vim'
-  " color code
-  NeoBundle 'gorodinskiy/vim-coloresque'
-  " calc
-  NeoBundle 'theniceboy/vim-calc'
-
-  " markdown preview
-  " - install yarn
-  " - cd ~/.vim/bundle/markdown-preview.nvim/app
-  " - yarn install
-  NeoBundle 'iamcco/markdown-preview.nvim'
-
-  " yaml folding
-  NeoBundle 'pedrohdz/vim-yaml-folds'
-  " esa
-  NeoBundle 'upamune/esa.vim', {'depends': 'mattn/webapi-vim'}
-
-  NeoBundle 'mattn/vim-chatgpt'
-call neobundle#end()
-" Neobundle block end
+let s:removed_plugins = dein#check_clean()
+if len(s:removed_plugins) > 0
+  call map(s:removed_plugins, "delete(v:val, 'rf')")
+  call dein#recache_runtimepath()
+endif
 
 filetype plugin indent on
-
-" If there are uninstalled bundles found on startup,
-" this will conveniently prompt you to install them.
-NeoBundleCheck
-
-" Pathogen
-if isdirectory(expand('~/.vim/bundle/neobundle/vim-pathogen'))
- call pathogen#infect('~/.vim/bundle/pathogen')
- call pathogen#helptags()
-endif
-
-let s:is_windows =  has('win16') || has('win32') || has('win64')
-let s:is_cygwin  =  has('win32unix')
-let s:is_cui     = !has('gui_running')
-
-if s:is_cygwin
-  if &term =~# '^xterm' && &t_Co < 256
-    set t_Co=256  " Extend terminal color of xterm
-  endif
-  if &term !=# 'cygwin'  " not in command prompt
-    " Change cursor shape depending on mode
-    let &t_ti .= "\e[1 q"
-    let &t_SI .= "\e[5 q"
-    let &t_EI .= "\e[1 q"
-    let &t_te .= "\e[0 q"
-  endif
-else
-  set t_Co=256
-endif
-
-" clicpboard
-set clipboard+=unnamed
+syntax enable
 
 " leader
 let mapleader = ","
@@ -146,12 +45,14 @@ scriptencoding utf-8
 set fileencodings=utf-8,iso-2022-jp,cp932,sjis,euc-jp
 set fileformats=unix,dos,mac
 
-" color
-syntax on
-set background=dark
-if isdirectory(expand("~/.vim/bundle/vim-womprat/"))
-  colorscheme womprat
-endif
+" cursor
+set backspace=eol,indent,start
+set wildmode=list:longest
+set nrformats=""
+noremap j gj
+noremap k gk
+noremap <down> gj
+noremap <up> gk
 
 " tab indent
 set shiftwidth=4
@@ -160,20 +61,34 @@ set tabstop=4
 set smarttab
 set autoindent
 set smartindent
-autocmd FileType yaml IndentGuidesEnable
 
+" buffer
+set nobackup
+set noswapfile
+set hidden
+set splitbelow
+set splitright
+
+" color
+set background=dark
+colorscheme womprat
+
+" information
 set number
-" frames
-" status line
-" set statusline=%n\ %f%m\ [%{&ff},%Y,%{(&fenc!=''?&fenc:&enc)},%l/%L(%p%%),%{getfsize(expand('%%:p'))}byte]
-" set laststatus=2
 
-" cursor
-set backspace=eol,indent,start
-set wildmode=list:longest
-set nrformats=""
-noremap j gj
-noremap k gk
+" special chars
+set list
+set listchars=tab:>\ ,trail:-,nbsp:%,extends:>,precedes:<
+hi ZenkakuSpace cterm=underline ctermfg=lightblue guibg=#666666
+au BufNewFile,BufRead * match ZenkakuSpace /　/
+set ambiwidth=double
+set showmatch
+
+" spell
+set nospell
+let g:enable_spelunker_vim = 1
+highlight SpelunkerSpellBad cterm=underline ctermfg=160 gui=underline guifg=#9e9e9e
+highlight SpelunkerComplexOrCompoundWord cterm=underline ctermfg=NONE gui=underline guifg=NONE
 
 " search
 set ignorecase
@@ -183,86 +98,41 @@ set hlsearch
 set nowrapscan
 nmap * *N
 
-" special chars
-set list
-set listchars=tab:>\ ,trail:-,nbsp:%,extends:>,precedes:<
-
-" zenkaku space
-hi ZenkakuSpace cterm=underline ctermfg=lightblue guibg=#666666
-au BufNewFile,BufRead * match ZenkakuSpace /　/
-set ambiwidth=double
-
-" spell
-set nospell
-let g:enable_spelunker_vim = 1
-highlight SpelunkerSpellBad cterm=underline ctermfg=160 gui=underline guifg=#9e9e9e
-highlight SpelunkerComplexOrCompoundWord cterm=underline ctermfg=NONE gui=underline guifg=NONE
-
-" calc
-nnoremap <LEADER>a :call Calc()<CR>
-
-
-" buffer
-set nobackup
-set noswapfile
-set hidden
-set splitbelow
-set splitright
-
-" nerdtree
-map <C-m><C-m> :NERDTreeToggle<CR>
-let g:NERDTreeGitStatusIndicatorMapCustom = {
-    \ "Modified"  : "!",
-    \ "Staged"    : "+",
-    \ "Untracked" : "*",
-    \ "Renamed"   : ">",
-    \ "Unmerged"  : "=",
-    \ "Deleted"   : "x",
-    \ "Dirty"     : "!",
-    \ "Clean"     : ".",
-    \ "Unknown"   : "?"
-    \ }
-
-" vim-airline
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_theme='jellybeans'
-
+" Command Map
 " Buffre Close
 nnoremap <Leader>d :bp<bar>sp<bar>bn<bar>bd<bar>bn<CR>
 " Chrome Reload
 nnoremap <Leader>r :ChromeReload<CR><C-l>
 " let g:user_emmet_leader_key='<c-t>'
 nnoremap <Leader>c :SyntasticCheck<CR>
+" calc
+nnoremap <LEADER>a :call Calc()<CR>
 
+" buffer
 nnoremap <C-p> :bp<CR>
 nnoremap <C-n> :bn<CR>
 
 " no copy on delete
 nnoremap x "_x
-" nnoremap dd "_dd
+nnoremap dd "_dd
 nnoremap D "_D
 nnoremap s "_s
 
-cmap mdp MarkdownPreview
+" move lines
+" nnoremap J :m .+1<CR>==
+" nnoremap K :m .-2<CR>==
+" inoremap J <Esc>:m .+1<CR>==gi
+" inoremap K <Esc>:m .-2<CR>==gi
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
 
-" vim-easy-align
-" Start interactive EasyAlign in visual mode (e.g. vipga)
-xmap ga <Plug>(EasyAlign)
-" Start interactive EasyAlign for a motion/text object (e.g. gaip)
-nmap ga <Plug>(EasyAlign)
-
-" PHP
-let g:PHP_vintage_case_default_indent = 1
-let g:PHP_outdentphpescape = 0
-
-" diff
-if &diff
-    " diff mode
-    set diffopt+=iwhite
-endif
-
-" lcoal
-let g:localvimrc_ask=0
+" vim-airline
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_theme='jellybeans'
+let g:airline#extensions#default#layout = [
+    \ [ 'c'],
+    \ [ 'y', 'error', 'warning']
+    \ ]
 
 " syntax check
 set statusline+=%#warningmsg#
@@ -275,26 +145,10 @@ let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 1
 let g:syntastic_enable_signs=1
 
-" let g:syntastic_mode_map = { 'mode': 'passive', 'passive_filetypes': ['ruby'] }
-" let g:syntastic_ruby_checkers = ['rubocop']
-" let g:syntastic_ruby_rubocop_exe = 'rubocop'
-
-set signcolumn=yes
-let g:gitgutter_async = 1
-let g:gitgutter_sign_modified = 'rw'
-highlight GitGutterAdd ctermfg=green
-highlight GitGutterChange ctermfg=yellow
-highlight GitGutterDelete ctermfg=red
-highlight GitGutterChangeDelete ctermfg=yellow
-
-
-let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': ['markdown', 'text'] }
-let g:syntastic_markdown_checkers = ['textlint']
-let g:syntastic_text_checkers = ['textlint']
-
-set foldmethod=manual
-let g:vim_markdown_folding_disabled = 1
-
-autocmd FileType markdown let g:EditorConfig_disable_rules = ['trim_trailing_whitespace']
-autocmd FileType markdown inoremap <buffer> <C-J> <C-O>$<Space><Space><CR>
+" chat gpt
+let g:chat_gpt_max_tokens=2000
+let g:chat_gpt_model='gpt-3.5-turbo'
+let g:chat_gpt_session_mode=1
+let g:chat_gpt_temperature = 0.7
+let g:chat_gpt_lang = 'Japanese'
 
