@@ -32,7 +32,6 @@ if len(s:removed_plugins) > 0
   call map(s:removed_plugins, "delete(v:val, 'rf')")
   call dein#recache_runtimepath()
 endif
-" }}}
 
 filetype plugin indent on
 syntax enable
@@ -122,14 +121,18 @@ nnoremap s "_s
 " move lines
 " nnoremap J :m .+1<CR>==
 " nnoremap K :m .-2<CR>==
-inoremap J <Esc>:m .+1<CR>==gi
-inoremap K <Esc>:m .-2<CR>==gi
+" inoremap J <Esc>:m .+1<CR>==gi
+" inoremap K <Esc>:m .-2<CR>==gi
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
 
 " vim-airline
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_theme='jellybeans'
+let g:airline#extensions#default#layout = [
+    \ [ 'c'],
+    \ [ 'y', 'error', 'warning']
+    \ ]
 
 " syntax check
 set statusline+=%#warningmsg#
@@ -141,3 +144,11 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 1
 let g:syntastic_enable_signs=1
+
+" chat gpt
+let g:chat_gpt_max_tokens=2000
+let g:chat_gpt_model='gpt-3.5-turbo'
+let g:chat_gpt_session_mode=1
+let g:chat_gpt_temperature = 0.7
+let g:chat_gpt_lang = 'Japanese'
+

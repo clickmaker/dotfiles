@@ -56,14 +56,10 @@ alias shell='exec $SHELL -l'
 alias dc='docker compose '
 alias dcu='(cd dockerdev && docker compose up -d) || docker compose up -d'
 alias dcd='docker compose down'
-alias dcr='docker compose run --rm runner '
+alias dcr='(cd dockerdev && docker compose run --rm runner) || docker compose run --rm runner '
 alias dcrst='docker compose restart'
 alias dcbe='docker compose run --rm runner bundle exec '
 alias dcbi='docker compose run --rm runner bundle install '
-
-function simple-notify {
-  osascript -e "display notification \"${2:-has done.}\" with title \"${1:-something}\" sound name \"default\""
-}
 
 # p10k
 # ZI plugin manager
@@ -76,21 +72,6 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/opt/homebrew/Caskroom/miniconda/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh" ]; then
-        . "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh"
-    else
-        export PATH="/opt/homebrew/Caskroom/miniconda/base/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
 
 eval "$(direnv hook zsh)"
 

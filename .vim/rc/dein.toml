@@ -64,3 +64,8 @@ repo = 'theniceboy/vim-calc'
 # copilot
 [[plugins]]
 repo = 'github/copilot.vim'
+
+# chatgpt
+[[plugins]]
+repo = 'CoderCookE/vim-chatgpt'
+
