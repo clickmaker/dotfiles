@@ -6,6 +6,7 @@ ln -snf $SCRIPT_DIR/.gitconfig .gitconfig
 ln -snf $SCRIPT_DIR/.tmux.conf .tmux.conf
 ln -snf $SCRIPT_DIR/.vimrc     .vimrc
 ln -snf $SCRIPT_DIR/.zshrc     .zshrc
+ln -snf $SCRIPT_DIR/.alias     .alias
 ln -snf $SCRIPT_DIR/.p10k.zsh  .p10k.zsh
 
 mkdir -p .vim/rc
