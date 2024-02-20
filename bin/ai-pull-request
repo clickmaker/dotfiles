@@ -1,5 +1,37 @@
 #!/bin/sh -e
 
+# リポジトリ情報
+REPO_OWNER="Hotstarup"
+REPO_NAME="peraichi"
+
+# GitHub APIを使ってデフォルトブランチを取得
+DEFAULT_BRANCH=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+"https://api.github.com/repos/$REPO_OWNER/$REPO_NAME" | jq -r '.default_branch')
+
+# headの初期値を設定
+HEAD=$(git rev-parse HEAD)
+
+# 引数の処理
+while getopts "b:h:" opt; do
+  case ${opt} in
+    b) BASE=$OPTARG ;;
+    h) HEAD=$OPTARG ;;
+  esac
+done
+
+# baseが未指定の場合はGitHubから取得したデフォルトブランチを設定
+if [ -z "$BASE" ]; then
+  BASE=$DEFAULT_BRANCH
+fi
+
+echo $BASE
+echo $HEAD
+
+# git diffの実行
+git diff $BASE $HEAD
+
+exit;
+
 # get diff
 DIFF=$(git diff origin/main...HEAD)
 
