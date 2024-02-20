@@ -1,0 +1,20 @@
+#!/bin/sh -eu
+
+# get diff
+DIFF=$(git diff --staged)
+
+# prompt for ai
+PROMPT=$(cat <<EOL
+generate git commit message from below diff, in one line, precise length, summarized.
+--
+${DIFF}
+--
+EOL
+)
+
+# generate commit message
+RAW_MESSAGE=$(echo "$PROMPT" | chatgpt-cli -n 2>/dev/null)
+
+# remove quotes
+# and prefer to change Refactor to Modify
+echo "$RAW_MESSAGE" | tr -d "'\"" | sed -e 's/^Refactored/Modified/i' -e 's/^Refactor/Modify/i'
