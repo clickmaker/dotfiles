@@ -1,0 +1,13 @@
+#!/bin/sh -e
+
+# get diff
+DIFF=$(git diff origin/main...HEAD)
+
+# make temp file
+TEMP_FILE=$(mktemp)
+
+echo "${DIFF}}" > ${TEMP_FILE}
+
+chatgpt-cli --context ${TEMP_FILE}
+
+rm ${TEMP_FILE}
