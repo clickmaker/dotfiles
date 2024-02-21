@@ -9,8 +9,9 @@ fi
 
 # prompt for ai
 PROMPT=$(cat <<EOL
-generate git commit message from below diff, in one line, precise length, summarized.
-must follow format: <type>(<scope>): <subject>
+generate git commit message from below diff, in one sentence.
+must follow format: <type>: <subject>
+include purpose as much as possible.
 --
 ${DIFF}
 --
