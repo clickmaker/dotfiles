@@ -1,44 +1,47 @@
-#!/bin/sh -e
+#!/bin/sh -eu
 
-# リポジトリ情報
-REPO_OWNER="Hotstarup"
-REPO_NAME="peraichi"
-
-# GitHub APIを使ってデフォルトブランチを取得
-DEFAULT_BRANCH=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
-"https://api.github.com/repos/$REPO_OWNER/$REPO_NAME" | jq -r '.default_branch')
-
-# headの初期値を設定
-HEAD=$(git rev-parse HEAD)
-
-# 引数の処理
-while getopts "b:h:" opt; do
-  case ${opt} in
-    b) BASE=$OPTARG ;;
-    h) HEAD=$OPTARG ;;
+# オプションの処理
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -B|--base)
+      BASE=$2
+      shift 2
+      ;;
+    -H|--head)
+      HEAD=$2
+      shift 2
+      ;;
+    *)
+      echo "Invalid option: $1"
+      exit 1
+      ;;
   esac
 done
 
-# baseが未指定の場合はGitHubから取得したデフォルトブランチを設定
+# baseが未指定の場合はデフォルトブランチを設定
 if [ -z "$BASE" ]; then
-  BASE=$DEFAULT_BRANCH
+  BASE=origin/$(git remote show origin | grep 'HEAD branch' | awk '{print $NF}')
 fi
 
-echo $BASE
-echo $HEAD
+# headの初期値を設定
+if [ -z "$HEAD" ]; then
+  HEAD=$(git rev-parse HEAD)
+fi
 
-# git diffの実行
-git diff $BASE $HEAD
-
-exit;
+# すでにマージ済みかどうかの判定
+if git merge-base --is-ancestor $HEAD $BASE; then
+  echo "$HEAD branch is already merged into ${BASE}" >&2
+  exit 1
+fi
 
 # get diff
-DIFF=$(git diff origin/main...HEAD)
+DIFF=$(git diff $BASE...$HEAD)
 
 # make temp file
 TEMP_FILE=$(mktemp)
 
-echo "${DIFF}}" > ${TEMP_FILE}
+echo "修正内容です" > ${TEMP_FILE}
+echo "${DIFF}}" >> ${TEMP_FILE}
 
 chatgpt-cli --context ${TEMP_FILE}
 
