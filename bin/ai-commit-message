@@ -2,6 +2,10 @@
 
 # get diff
 DIFF=$(git diff --staged)
+if [ -z "$DIFF" ]; then
+  echo "No changes to commit"
+  exit 1
+fi
 
 # prompt for ai
 PROMPT=$(cat <<EOL
