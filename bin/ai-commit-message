@@ -6,6 +6,7 @@ DIFF=$(git diff --staged)
 # prompt for ai
 PROMPT=$(cat <<EOL
 generate git commit message from below diff, in one line, precise length, summarized.
+must follow format: <type>(<scope>): <subject>
 --
 ${DIFF}
 --
