@@ -28,7 +28,8 @@ fi
 PROMPT=$(cat <<EOL
 generate git commit message from below diff, in one sentence.
 must follow format: <type>: <subject>
-include purpose as much as possible.
+subject should include purpose as much as possible.
+type const: feat, fix, docs, style, refactor, test, chore
 output language: ${PROMPT_LANG}
 --
 ${DIFF}
