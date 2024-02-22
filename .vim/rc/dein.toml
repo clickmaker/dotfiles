@@ -69,3 +69,6 @@ repo = 'github/copilot.vim'
 [[plugins]]
 repo = 'CoderCookE/vim-chatgpt'
 
+# tag display
+[[plugins]]
+repo = 'preservim/tagbar'
