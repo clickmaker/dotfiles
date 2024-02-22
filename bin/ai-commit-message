@@ -14,7 +14,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 # get diff
-DIFF=$(git diff --staged)
+DIFF=$(git diff --staged -W)
 if [ -z "$DIFF" ]; then
   echo "No changes to commit"
   exit 1
