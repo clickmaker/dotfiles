@@ -41,5 +41,4 @@ EOL
 RAW_MESSAGE=$(echo "$PROMPT" | chatgpt-cli -n 2>/dev/null)
 
 # remove quotes
-# and prefer to change Refactor to Modify
-echo "$RAW_MESSAGE" | tr -d "'\"" | sed -e 's/^Refactored/Modified/i' -e 's/^Refactor/Modify/i'
+echo "$RAW_MESSAGE" | tr -d "'\""
