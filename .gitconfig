@@ -12,11 +12,19 @@
     stt = status -uno
     dfs = diff --staged -w
     dfw = diff --word-diff
-    brgc = ! git branch --merged | egrep -v '(^\\*|master|main|dev)' | xargs git branch -d
-    chbr = "!sh -c 'git checkout $1 && docker-compose restart' -"
-    upst = "!sh -c 'git branch --set-upstream-to=origin/$1 $1' -"
-    down = "!sh -c 'git checkout -b $1 origin/$1' -"
-    cmemp = commit --allow-empty
+    brgc = branch-gc
+    ac = ai-commit
+    ace = ai-commit -e
+    acjp = ai-commit-jp
+    branch-gc = ! git branch --merged | egrep -v '(^\\*|master|main|dev)' | xargs git branch -d
+    branch-delete-both = "!sh -c 'git push origin :$1 ; git branch -D $1' -"
+    upstream = "!sh -c 'git branch --set-upstream-to=origin/$1 $1' -"
+    download = "!sh -c 'git checkout -b $1 origin/$1' -"
+    empty-commit = commit --allow-empty
+    archive-log = "!sh -c 'git log -p --all --full-history -- $1' -"
+    ai-commit = ! git commit -m \"$(ai-commit-message)\"
+    ai-commit-jp = ! git commit -m \"$(ai-commit-message -L jp)\"
+    create-pull-request = ! gh pr create --base $(git remote show origin | grep 'HEAD branch' | awk '{print $NF}') -w
 [color]
     diff = auto
     status = auto
