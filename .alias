@@ -16,4 +16,5 @@ alias dcr='(cd dockerdev && docker compose run --rm runner) || docker compose ru
 alias dcrst='docker compose restart'
 alias dcbe='docker compose run --rm runner bundle exec '
 alias dcbi='docker compose run --rm runner bundle install '
+alias phpcs='php vendor/bin/phpcs --report=diff --standard=./rulesets/phpcs.xml '
 
