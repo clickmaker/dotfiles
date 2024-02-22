@@ -2,9 +2,9 @@
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    -jp|--japanese)
-      PROMPT_LANG="jp"
-      shift 1
+    -L|--lang)
+      PROMPT_LANG=$2
+      shift 2
       ;;
     *)
       echo "Invalid option: $1"
@@ -12,6 +12,10 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
+
+if [ -z "$PROMPT_LANG" ]; then
+  PROMPT_LANG="en"
+fi
 
 # get diff
 DIFF=$(git diff --staged -W)
@@ -21,29 +25,16 @@ if [ -z "$DIFF" ]; then
 fi
 
 # prompt for ai
-if [ "$PROMPT_LANG" = "jp" ]; then
-  PROMPT=$(cat <<EOL
-以下の差分から、一行でコミットメッセージを生成してください。
-フォーマットは <type>: <subject> です。
-できるだけ目的を含めてください。
-subjectは日本語で書いてください。
---
-${DIFF}
---
-EOL
-  )
-
-else
-  PROMPT=$(cat <<EOL
+PROMPT=$(cat <<EOL
 generate git commit message from below diff, in one sentence.
 must follow format: <type>: <subject>
 include purpose as much as possible.
+output language: ${PROMPT_LANG}
 --
 ${DIFF}
 --
 EOL
-  )
-fi
+)
 
 # generate commit message
 RAW_MESSAGE=$(echo "$PROMPT" | chatgpt-cli -n 2>/dev/null)
