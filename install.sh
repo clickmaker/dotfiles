@@ -26,3 +26,5 @@ mkdir -p bin
 cd bin
 ln -snf $SCRIPT_DIR/bin/ai-commit-message ai-commit-message
 ln -snf $SCRIPT_DIR/bin/ai-pull-request ai-pull-request
+ln -snf $SCRIPT_DIR/bin/termcolor.pl termcolor.pl
+ln -snf $SCRIPT_DIR/bin/recreate-pull-request recreate-pull-request
