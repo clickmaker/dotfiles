@@ -11,12 +11,21 @@ while [[ $# -gt 0 ]]; do
       HEAD=$2
       shift 2
       ;;
+    -L|--lang)
+      PROMPT_LANG=$2
+      shift 2
+      ;;
     *)
       echo "Invalid option: $1"
       exit 1
       ;;
   esac
 done
+
+# 言語の指定がない場合はデフォルトを設定
+if [ -z "$PROMPT_LANG" ]; then
+  PROMPT_LANG=${LANG:-en}
+fi
 
 # baseが未指定の場合はデフォルトブランチを設定
 if [ -z "$BASE" ]; then
@@ -45,7 +54,7 @@ fi
 # make temp file
 TEMP_FILE=$(mktemp)
 
-echo "修正内容です" > ${TEMP_FILE}
+echo "You're an expert engineer. plz answer in ${PROMPT_LANG}" > ${TEMP_FILE}
 echo "${DIFF}}" >> ${TEMP_FILE}
 
 chatgpt-cli --context ${TEMP_FILE}
