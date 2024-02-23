@@ -1,0 +1,77 @@
+#!/bin/bash
+set -e
+
+# This script is used to recreate a pull request
+
+# functions definition
+function add_number_to_branch_name() {
+    if [[ $1 =~ (.*[-_])([0-9]+)$ ]]; then
+        suffix_number=${BASH_REMATCH[2]}
+        suffix_number_next=$(($suffix_number+1))
+        branch_name=${BASH_REMATCH[1]}$suffix_number_next
+    else
+        branch_name=$1_1
+    fi
+
+    echo $branch_name
+}
+
+# main start.
+# set base branch name from current branch
+base_branch=$(git branch --show-current)
+
+# read import branch name
+# merge no-commit no-ff the input branch to the new branch
+
+read -p "Enter the branch name to import: " import_branch_name
+if [ -z "$import_branch_name" ]; then
+  echo "Branch name is empty"
+  exit 1
+fi
+git merge --no-commit --no-ff $import_branch_name
+git reset --mixed
+git status
+
+while true; do
+    # read branch name
+    # default value :
+    # at first, import branch name
+    # add suffix +1 to the branch name
+    # if number is already present, then increment the number
+    if [ -z "$branch_name" ]; then
+        branch_name=$import_branch_name
+    fi
+    branch_name=$(add_number_to_branch_name $branch_name)
+
+    # create new branch with the new branch name
+    git checkout -b $branch_name
+
+    # git add interactive mode
+    git add --interactive
+
+    # if operations end, then git commit
+    git ai-commit -e
+
+    # if commit is successful, then push the new branch to the remote
+    git push origin $branch_name
+
+    # create pull request
+    gh pr create --base $base_branch --head $branch_name
+
+    # if pull request is successful, show remaining diff
+    git diff
+
+    # read if continue
+    while true; do
+        read -p "Do you want to continue? (y/n): " answer
+        if [ "$answer" = "y" ]; then
+            break
+        elif [ "$answer" = "n" ]; then
+            exit 0
+        else
+            echo "Please enter y or n"
+        fi
+    done
+
+    base_branch=$branch_name
+done
