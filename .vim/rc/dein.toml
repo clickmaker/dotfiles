@@ -65,10 +65,6 @@ repo = 'theniceboy/vim-calc'
 [[plugins]]
 repo = 'github/copilot.vim'
 
-# chatgpt
-[[plugins]]
-repo = 'CoderCookE/vim-chatgpt'
-
 # tag display
 [[plugins]]
 repo = 'preservim/tagbar'

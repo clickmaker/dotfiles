@@ -17,7 +17,7 @@ ln -snf $SCRIPT_DIR/.vimrc init.vim
 
 cd $HOME
 mkdir -p .vim/rc
-cd .vim/rc 
+cd .vim/rc
 ln -snf $SCRIPT_DIR/.vim/rc/dein.toml dein.toml
 ln -snf $SCRIPT_DIR/.vim/rc/dein_lazy.toml dein_lazy.toml
 

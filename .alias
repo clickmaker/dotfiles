@@ -1,13 +1,18 @@
+alias g='git '
 alias a='git add '
-alias b='git branch '
+alias b='git branch --sort=committerdate '
 alias c='git checkout '
 alias d='git diff '
+alias s='git status '
+
 alias e='vim '
 alias f='find . '
-alias g='grep -rIin '
 alias l='ls -la '
-alias s='git status '
+
 alias shell='exec $SHELL -l'
+alias sed='gsed'
+alias vim='nvim'
+alias grep='grep -rIin '
 
 alias dc='docker compose '
 alias dcu='(cd dockerdev && docker compose up -d) || docker compose up -d'
@@ -16,5 +21,6 @@ alias dcr='(cd dockerdev && docker compose run --rm runner) || docker compose ru
 alias dcrst='docker compose restart'
 alias dcbe='docker compose run --rm runner bundle exec '
 alias dcbi='docker compose run --rm runner bundle install '
+
 alias phpcs='php vendor/bin/phpcs --report=diff --standard=./rulesets/phpcs.xml '
 

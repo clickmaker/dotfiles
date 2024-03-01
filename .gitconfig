@@ -25,6 +25,7 @@
     ai-commit = ! git commit -m \"$(ai-commit-message)\"
     ai-commit-jp = ! git commit -m \"$(ai-commit-message -L jp)\"
     create-pull-request = ! gh pr create --base $(git remote show origin | grep 'HEAD branch' | awk '{print $NF}') -w
+    recreate-pull-request = ! recreate-pull-request
 [color]
     diff = auto
     status = auto
@@ -33,6 +34,6 @@
     ui = true
     pager = true
 [core]
-    editor = vim
+    editor = nvim
     autocrlf = input
     pager = "less -FRX"

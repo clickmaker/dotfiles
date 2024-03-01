@@ -114,7 +114,7 @@ nnoremap <C-n> :bn<CR>
 
 " no copy on delete
 nnoremap x "_x
-nnoremap dd "_dd
+" nnoremap dd "_dd
 nnoremap D "_D
 nnoremap s "_s
 
@@ -145,10 +145,25 @@ let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 1
 let g:syntastic_enable_signs=1
 
-" chat gpt
-let g:chat_gpt_max_tokens=2000
-let g:chat_gpt_model='gpt-3.5-turbo'
-let g:chat_gpt_session_mode=1
-let g:chat_gpt_temperature = 0.7
-let g:chat_gpt_lang = 'Japanese'
+" tags
+set tags=.tags;$HOME
 
+function! s:execute_ctags() abort
+  let tag_name = '.tags'
+  let tags_path = findfile(tag_name, '.;')
+  if tags_path ==# ''
+    return
+  endif
+
+  let tags_dirpath = fnamemodify(tags_path, ':p:h')
+  execute 'silent !cd' tags_dirpath '&& ctags -R --languages=php --php-kinds=cdfin -f' tag_name '2> /dev/null &'
+endfunction
+
+augroup ctags
+  autocmd!
+  autocmd BufWritePost * call s:execute_ctags()
+augroup END
+
+nmap <F8> :TagbarToggle<CR>
+nnoremap <C-]> g<C-]>
+inoremap <C-]> <ESC>g<C-]>
