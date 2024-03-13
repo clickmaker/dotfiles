@@ -4,15 +4,16 @@ alias b='git branch --sort=committerdate '
 alias c='git checkout '
 alias d='git diff '
 alias s='git status '
+alias gpc='gh pr create '
 
 alias e='vim '
 alias f='find . '
 alias l='ls -la '
+alias cc='chatgpt-cli '
 
 alias shell='exec $SHELL -l'
 alias sed='gsed'
 alias vim='nvim'
-alias grep='grep -rIin '
 
 alias dc='docker compose '
 alias dcu='(cd dockerdev && docker compose up -d) || docker compose up -d'

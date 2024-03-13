@@ -44,7 +44,9 @@ if git merge-base --is-ancestor $HEAD $BASE; then
 fi
 
 # get diff
-DIFF=$(git diff $BASE...$HEAD)
+DIFF=$(git diff $BASE $HEAD)
+
+echo "$DIFF"
 
 if [ -z "$DIFF" ]; then
   echo "No changes" >&2
