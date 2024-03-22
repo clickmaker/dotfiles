@@ -167,3 +167,37 @@ augroup END
 nmap <F8> :TagbarToggle<CR>
 nnoremap <C-]> g<C-]>
 inoremap <C-]> <ESC>g<C-]>
+
+" xdebug
+let g:vdebug_force_ascii = 1
+let g:vdebug_options= {
+\    "ide_key" : "PHP_IDE_DEBUG",
+\    "server" : "127.0.0.1",
+\    "port" : 9003,
+\    "timeout" : 20,
+\    "on_close" : 'detach',
+\    "break_on_open" : 0,
+\    "remote_path" : "",
+\    "local_path" : "",
+\    "debug_window_level" : 0,
+\    "debug_file_level" : 2,
+\    "debug_file" : "/tmp/xdebug.log",
+\    "path_maps" : {
+\       '/app' : '/Users/'.$USER.'/Projects/HotStartup/peraichi',
+\    },
+\    "window_arrangement" : ["DebuggerWatch", "DebuggerStack"]
+\}
+
+let g:vdebug_keymap = {
+\    "run" : "<F5>",
+\    "run_to_cursor" : "<F9>",
+\    "step_over" : "<F2>",
+\    "step_into" : "<F3>",
+\    "step_out" : "<F4>",
+\    "close" : "<F6>",
+\    "detach" : "<F7>",
+\    "set_breakpoint" : "<F10>",
+\    "get_context" : "<F11>",
+\    "eval_under_cursor" : "<F12>",
+\    "eval_visual" : "<Leader>e"
+\}
