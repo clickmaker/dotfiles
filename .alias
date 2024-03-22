@@ -12,8 +12,9 @@ alias l='ls -la '
 alias cc='chatgpt-cli '
 
 alias shell='exec $SHELL -l'
-alias sed='gsed'
-alias vim='nvim'
+alias sed='gsed '
+alias vim='nvim '
+alias vimdff='nvim -d '
 
 alias dc='docker compose '
 alias dcu='(cd dockerdev && docker compose up -d) || docker compose up -d'
