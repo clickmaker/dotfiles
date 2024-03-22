@@ -56,7 +56,7 @@ fi
 # make temp file
 TEMP_FILE=$(mktemp)
 
-echo "You're an expert engineer. plz answer in ${PROMPT_LANG}" > ${TEMP_FILE}
+echo "You're an expert engineer. plz answer in ${PROMPT_LANG} language" > ${TEMP_FILE}
 echo "${DIFF}}" >> ${TEMP_FILE}
 
 chatgpt-cli --context ${TEMP_FILE}
