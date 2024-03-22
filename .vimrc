@@ -201,3 +201,6 @@ let g:vdebug_keymap = {
 \    "eval_under_cursor" : "<F12>",
 \    "eval_visual" : "<Leader>e"
 \}
+
+imap <M-DOWN> <Plug>(copilot-next)
+imap <M-UP> <Plug>(copilot-previous)
