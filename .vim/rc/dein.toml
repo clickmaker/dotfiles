@@ -17,6 +17,17 @@ hook_post_update = '''
   let g:dein#plugin.build = cmd
 '''
 
+# dap -- from
+[[ plugins ]]
+repo = 'mfussenegger/nvim-dap'
+
+[[ plugins ]]
+repo = 'nvim-neotest/nvim-nio'
+
+[[ plugins ]]
+repo = 'rcarriga/nvim-dap-ui'
+# dap -- to
+
 # file
 [[plugins]]
 repo = 'Townk/vim-autoclose'
