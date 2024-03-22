@@ -1,25 +1,36 @@
-#!/bin/sh -e
+#!/bin/sh -eu
 
 function usage {
-  echo "Usage: ai-commit-message [-L | --lang <lang>]"
+  echo "Usage: ai-commit-message [OPTIONS]"
+  echo ""
+  echo "Generate git commit message from staged diff using GhatGPT."
   echo "Options:"
-  echo "  -L,--lang Language for output (default: en)"
+  echo "  -l,--lang LANG          Language for output (default: en)"
+  echo "  -b,--body-lines NUMBER  Add number of bullet points for body (default: 0)"
+  echo "  -n,--non-interactive    Do not prompt for confirmation (default: no)"
 }
 
+# set options
+OPTION_LANG=""
+OPTION_BODY_LINES=""
+OPTION_INTERACTIVE=""
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    -L|--lang)
-      PROMPT_LANG=$2
+    -l|--lang)
+      OPTION_LANG=$2
       shift 2
       ;;
-    -K|--keyword)
-      PROMPT_KEYWORD=$2
+    -b|--body-lines)
+      OPTION_BODY_LINES=$2
       shift 2
+      ;;
+    -n|--non-interactive)
+      OPTION_INTERACTIVE='none'
+      shift 1
       ;;
     -h|--help)
       usage
       exit 0
-      shift 1
       ;;
     *)
       echo "Unknown option: $1"
@@ -28,32 +39,64 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
-if [ -z "$PROMPT_LANG" ]; then
-  PROMPT_LANG="en"
+
+PROMPT_LANG=""
+PROMPT_BODY=""
+if [ ! -z "$OPTION_LANG" ]; then
+  PROMPT_LANG="output must be in ${OPTION_LANG} language."
+fi
+if [ ! -z "$OPTION_BODY_LINES" ]; then
+  PROMPT_BODY="add summarized description, in under ${OPTION_BODY_LINES} bullet points, open empty line before description."
 fi
 
 # get diff
-DIFF=$(git diff --staged)
-if [ -z "$DIFF" ]; then
+GIT_DIFF=$(git diff --staged)
+if [ -z "$GIT_DIFF" ]; then
   echo "No changes to commit. git add some changes and try again."
   exit 1
 fi
 
-# prompt for ai
-PROMPT=$(cat <<EOL
-generate git commit message from below diff, in one sentence.
-must follow format: <type>: <subject>
-subject should include purpose as much as possible.
-type const: feat, fix, docs, style, refactor, test, chore
-output language: ${PROMPT_LANG}
+# query gpt
+function query_gpt {
+  # prompt for ai
+  PROMPT=$(cat <<EOL
+generate git commit message from below diff, in one sentences.
+the first sentence must follow format: <type>: <subject>
+  type const: feat, fix, docs, style, refactor, test, chore
+${PROMPT_BODY}
+${PROMPT_LANG}
 --
-${DIFF}
+${GIT_DIFF}
 --
 EOL
-)
+  )
 
-# generate commit message
-RAW_MESSAGE=$(echo "$PROMPT" | chatgpt-cli -n 2>/dev/null)
+  # generate commit message
+  # remove quotes
+  echo "$PROMPT" | chatgpt-cli -n 2>/dev/null | tr -d "'\""
+}
 
-# remove quotes
-echo "$RAW_MESSAGE" | tr -d "'\""
+MESSAGE=$(query_gpt)
+
+if [ ! -z "$OPTION_INTERACTIVE" ]; then
+  echo "$MESSAGE"
+  exit 0
+fi
+
+echo "$MESSAGE" >&2
+while true; do
+  read -p "OK ? [y/n/q]: " ANS
+  case "$ANS" in
+    n)
+      MESSAGE=$(query_gpt)
+      echo "$MESSAGE" >&2
+      ;;
+    q)
+      exit 0
+      ;;
+    *)
+      echo "$MESSAGE"
+      break
+      ;;
+  esac
+done
